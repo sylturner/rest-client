@@ -11,6 +11,21 @@ module RestClient
       @code ||= @net_http_res.code.to_i
     end
 
+    # Has the request been made yet
+    def requested?
+      !(@net_http_res.blank? rescue true)
+    end
+
+    # Was there a successful request?
+    def success?
+      (requested? && self.return! rescue false) ? true : false
+    end
+
+    # Was there a failed request?
+    def failed?
+      requested? && !success?
+    end
+
     # A hash of the headers, beautified with symbols and underscores.
     # e.g. "Content-type" will become :content_type.
     def headers
